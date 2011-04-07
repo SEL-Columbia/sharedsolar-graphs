@@ -11,13 +11,15 @@ a { color: #fff; font-weight: bold; }
 
 #container { 
     margin: 10px auto;
-    width: 1200px;
+    width: 1000px;
     height: 650px;
-//    border: 1px solid #fff;
+
+} 
+
+#title { 
+    float: left;
 } 
 
 #graphs { 
-
+//    border: 1px solid #fff;    
 } 
-
-
