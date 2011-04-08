@@ -35,7 +35,7 @@ var main = function() {
   resetHeight = function(graph, height) { 
     t = globalBottom - height;
     graph.attr('y',t);
-    graph.attr('height',height);
+    graph.animate({'height': height},200);
     return graph
   };
 

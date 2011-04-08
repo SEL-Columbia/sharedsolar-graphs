@@ -35,7 +35,7 @@ var main = function() {
   resetHeight = function(graph, height) { 
     t = globalBottom - height;
     graph.attr('y',t);
-    graph.attr('height',height);
+    graph.animate({'height': height},200);
     return graph
   };
 
@@ -101,7 +101,7 @@ var main = function() {
     var loop = setInterval(function() { 
       load_data(function() { 
         resetHeight(c.emax, d.emax);
-        resetHeight(c.energy,d.wh_today);
+        resetHeight(c.energy, d.wh_today);
         c.energyLabel.attr("text", parseInt(d.wh_today) + " Wh");
         c.energyLabel.attr("opacity",1);
         c.energyLabel.attr("y",globalBottom + 20);
