@@ -33,11 +33,12 @@ var main = function() {
 
 
   resetHeight = function(graph, height) { 
-    t = globalBottom - height;
-    graph.attr('y',t);
-    graph.animate({'height': height},200);
+    var top = globalBottom - height;
+    graph.attr('y',top);
+    graph.attr("height",height);
     return graph
   };
+
 
   function make_label_large(label) { 
     label.attr({ "fill": "#fff",
@@ -66,8 +67,17 @@ var main = function() {
       var creditLabel = make_label_small(paper.text(left+55,top+50,"0"),"#fff");     
       var wattBox = paper.rect(left, 70, 100, 50, 5);
       wattBox.attr("fill","#fff");
-      var watts = make_label_small(paper.text(left+55, 95, "0"), "black"); 
+      var watts = paper.text(left+50, 95, "0")
+
+      wattBox.attr("opacity",0);
+      watts.attr({"font-family": "Helvetica",
+                  "font-size": 25,
+                  "font-weight": "bold",
+                  "fill": "black",
+                 }); 
+
       circuit.watts = watts;
+      circuit.wattBox  = wattBox ; 
       creditLabel.attr("opacity",0);
       credit.attr("fill", circuit.color);
       circuit.credit = credit;
@@ -97,12 +107,18 @@ var main = function() {
   function mainLoop() {     
     var loop = setInterval(function() { 
       load_data(function() { 
+        
+        if (d.watts > 0) { 
+          c.wattBox.attr("opacity",1);
+        } else { 
+          c.wattBox.attr("opacity",0);
+        }
 
-        resetHeight(c.credit,d.cr/50);
-        c.creditLabel.attr("text", parseInt(d.cr) + " CFA");
+        resetHeight(c.credit,d.cr*30);
+        c.creditLabel.attr("text", parseFloat(d.cr) + " CFA");
         c.creditLabel.attr("opacity",1);
         c.creditLabel.attr("y",globalBottom + 20);
-        c.watts.attr("text", parseInt(d.watts) + " w");
+        c.watts.attr("text", parseFloat(d.watts) + " w");
       }); 
 
     }, checkMeterInterval) 

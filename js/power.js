@@ -1,6 +1,6 @@
 var circuits, loop, paper, resetHeight;
 var globalBottom = 500;
-var checkMeterInterval = 1000; 
+var checkMeterInterval = 500; 
 
 var main = function() {
   var creditColor = "green";
@@ -33,9 +33,9 @@ var main = function() {
 
 
   resetHeight = function(graph, height) { 
-    t = globalBottom - height;
-    graph.attr('y',t);
-    graph.animate({'height': height},200);
+    var top = globalBottom - height;
+    graph.attr('y',top);
+    graph.attr("height",height);
     return graph
   };
 
@@ -70,8 +70,15 @@ var main = function() {
       var wattBox = paper.rect(left, 70, 100, 50, 5);
       wattBox.attr("fill","#fff");
       var watts = make_label_small(paper.text(left+55, 95, "0"), "black"); 
+      wattBox.attr("opacity",0);
+      watts.attr({"font-family": "Helvetica",
+                  "font-size": 25,
+                  "font-weight": "bold",
+                  "fill": "black",
+                 });   
       circuit.emax = emax;
       circuit.watts = watts;
+      circuit.wattBox = wattBox;
       energy.attr("fill", circuit.color);
       circuit.energy = energy;
       circuit.energyLabel = energyLabel;
@@ -100,12 +107,20 @@ var main = function() {
   function mainLoop() {     
     var loop = setInterval(function() { 
       load_data(function() { 
-        resetHeight(c.emax, d.emax);
-        resetHeight(c.energy, d.wh_today);
-        c.energyLabel.attr("text", parseInt(d.wh_today) + " Wh");
+        resetHeight(c.emax, d.emax*50);
+        resetHeight(c.energy, d.wh_today*50);
+        
+        if (d.watts > 0.01) { 
+          c.wattBox.attr("opacity",1);
+        } else { 
+          c.wattBox.attr("opacity",0);
+        }
+
+
+        c.energyLabel.attr("text", parseFloat(d.wh_today).toFixed(1) + " Wh");
         c.energyLabel.attr("opacity",1);
         c.energyLabel.attr("y",globalBottom + 20);
-        c.watts.attr("text", parseInt(d.watts) + " w");
+        c.watts.attr("text", parseFloat(d.watts) + " w");
       }); 
 
     }, checkMeterInterval) 
