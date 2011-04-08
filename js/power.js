@@ -7,17 +7,17 @@ var main = function() {
   var wattColor = "green";
 
   circuits = { 
-    '192.168.1.201' : {'color': 'green'},
-    '192.168.1.202' : {'color': 'green'},
-    '192.168.1.203' : {'color': 'green'}, 
-    '192.168.1.204' : {'color': 'green'},     
-    '192.168.1.205' : {'color': 'green'},
+    '192.168.1.201' : {'color': 'red'},
+    '192.168.1.202' : {'color': 'red'},
+    '192.168.1.203' : {'color': 'red'}, 
+    '192.168.1.204' : {'color': 'red'},     
+    '192.168.1.205' : {'color': 'red'},
 
   }; 
 
   paper = Raphael("graphs", 1000, 700);
 
-  var subtitle = paper.text(108, globalBottom + 23, "Credit:");
+  var subtitle = paper.text(108, globalBottom + 23, "Watt hours:");
   subtitle.attr({
     "font-family": "Helvetica",
     "font-size": 20,
@@ -62,16 +62,19 @@ var main = function() {
       var circuit = circuits[id];
       var top = globalBottom - 10 ; 
       var cLabel = make_label_large(paper.text(left+50,600,id.substr(-2)));
-      var credit = paper.rect(left, top, 100, 10, 5);
-      var creditLabel = make_label_small(paper.text(left+55,top+50,"0"),"#fff");     
+      var energy = paper.rect(left, top, 100, 10, 5);
+      var energyLabel = make_label_small(paper.text(left+55,top+50,"0"),"#fff");     
+      var emax = paper.rect(left,top, 100, 10, 5);
+      emax.attr("stroke","#66ffff");
+      
       var wattBox = paper.rect(left, 70, 100, 50, 5);
       wattBox.attr("fill","#fff");
       var watts = make_label_small(paper.text(left+55, 95, "0"), "black"); 
+      circuit.emax = emax;
       circuit.watts = watts;
-      creditLabel.attr("opacity",0);
-      credit.attr("fill", circuit.color);
-      circuit.credit = credit;
-      circuit.creditLabel = creditLabel;
+      energy.attr("fill", circuit.color);
+      circuit.energy = energy;
+      circuit.energyLabel = energyLabel;
       left+= 150;
     })})(); 
   
@@ -97,11 +100,11 @@ var main = function() {
   function mainLoop() {     
     var loop = setInterval(function() { 
       load_data(function() { 
-
-        resetHeight(c.credit,d.cr/50);
-        c.creditLabel.attr("text", parseInt(d.cr) + " CFA");
-        c.creditLabel.attr("opacity",1);
-        c.creditLabel.attr("y",globalBottom + 20);
+        resetHeight(c.emax, d.emax);
+        resetHeight(c.energy,d.wh_today);
+        c.energyLabel.attr("text", parseInt(d.wh_today) + " Wh");
+        c.energyLabel.attr("opacity",1);
+        c.energyLabel.attr("y",globalBottom + 20);
         c.watts.attr("text", parseInt(d.watts) + " w");
       }); 
 
